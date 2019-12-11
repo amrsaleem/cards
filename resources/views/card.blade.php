@@ -10,8 +10,7 @@
     <button type="submit" class="btn btn-danger">Delete</button>
 
 </form>
-
-
+<img src="{{Storage::url($card->image)}}" width="300px" height="200px">
 <h2>{{$card->title}}</h2>
 
 <a>{{$card->description}}</a>

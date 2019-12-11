@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Card;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CardsController extends Controller
 {
@@ -36,7 +37,22 @@ class CardsController extends Controller
      */
     public function store(Request $request)
     {
-        Card::create(request(['title','description']));
+        if($request->hasfile('image')){
+            $filename = $request->image->getClientOriginalName();
+            $request->file('image')->storeAs('public',$filename);
+            
+            $card = new Card;
+            $card->title= $request->title;
+            $card->description= $request->description;
+            $card->image=$filename;
+            $card->save();
+        }
+           else
+               return 'there is no file selected';
+
+
+
+        //Card::create(request(['title','description','name']));
         return redirect('/cards');
     }
 
@@ -79,7 +95,23 @@ class CardsController extends Controller
     public function update(Request $request, Card $card)
     {
         //dd('hello');
-        $card->update(request(['title','description']));
+       // $card->update(request(['title','description']));
+
+        if($request->hasfile('image')){
+            $filename = $request->image->getClientOriginalName();
+            // to-do delete the pre image
+            $pre= "public/" . $card->image."";
+            Storage::delete($pre);
+            $request->file('image')->storeAs('public',$filename);
+        }
+           // $card = new Card;
+            $card->title= $request->title;
+            $card->description= $request->description;
+            if($request->hasfile('image'))
+                $card->image=$filename;
+            $card->save();
+
+
 
         return redirect('/');
     }
@@ -92,6 +124,9 @@ class CardsController extends Controller
      */
     public function destroy(Card $card)
     {
+
+        $pre= "public/" . $card->image."";
+        Storage::delete($pre);
         $card->delete();
         return redirect('/');
     }

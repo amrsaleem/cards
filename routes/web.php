@@ -21,3 +21,11 @@ Route::get('/card/{card}/edit','CardsController@edit');
 Route::patch('/card/{card}/edit','CardsController@update');
 Route::post('/cards/create','CardsController@store');
 Route::delete('/cards/{card}/delete','CardsController@destroy');
+
+
+
+Route::get('/upload','uploadController@index');
+Route::post('/store','uploadController@store');
+Route::get('/show','uploadController@show');
+
+
